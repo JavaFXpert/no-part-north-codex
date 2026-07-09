@@ -1,7 +1,7 @@
 import type { StyleSpecification } from 'maplibre-gl';
-import { countries } from './worldData';
 
 const emptyCollection = { type: 'FeatureCollection' as const, features: [] };
+const tileUrl = `${import.meta.env.BASE_URL}tiles/{z}/{x}/{y}.png`;
 
 export const createMapStyle = (
   projection: 'globe' | 'mercator',
@@ -9,7 +9,14 @@ export const createMapStyle = (
   version: 8,
   projection: { type: projection },
   sources: {
-    countries: { type: 'geojson', data: countries },
+    geography: {
+      type: 'raster',
+      tiles: [tileUrl],
+      tileSize: 256,
+      minzoom: 0,
+      maxzoom: 3,
+      attribution: 'Natural Earth',
+    },
     mask: { type: 'geojson', data: emptyCollection },
     route: { type: 'geojson', data: emptyCollection },
     points: { type: 'geojson', data: emptyCollection },
@@ -30,17 +37,13 @@ export const createMapStyle = (
       paint: { 'background-color': '#115ca8' },
     },
     {
-      id: 'land',
-      type: 'fill',
-      source: 'countries',
+      id: 'geography',
+      type: 'raster',
+      source: 'geography',
       paint: {
-        'fill-color': [
-          'case',
-          ['==', ['get', 'name'], 'Antarctica'],
-          '#f3f5ef',
-          '#4ba95f',
-        ],
-        'fill-antialias': false,
+        'raster-opacity': 1,
+        'raster-resampling': 'linear',
+        'raster-fade-duration': 0,
       },
     },
     {

@@ -61,7 +61,13 @@ export default function App() {
     setOriginName(name ?? findPresetName(coordinates) ?? null);
     setDestination(null);
     setPickMode('destination');
-    setNotice('Purple destinations can be reached without ever heading north.');
+    setNotice(
+      coordinates.lat <= -89.9
+        ? 'Every departure from the South Pole heads north, so no destinations qualify.'
+        : coordinates.lat >= 89.9
+          ? 'Every non-antipodal destination is southward from the North Pole.'
+          : 'Purple destinations can be reached without ever heading north.',
+    );
   }, []);
 
   const chooseDestination = useCallback(

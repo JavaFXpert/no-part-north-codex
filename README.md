@@ -30,6 +30,9 @@ Calculations, geography, and rendering all run in the browser. The Natural
 Earth geography is provided by the `world-atlas` package and no map API key is
 required.
 
+The projection-safe base-map tiles are committed under `public/tiles`. They can
+be regenerated after changing the map palette with `npm run generate:tiles`.
+
 ## Deploy to GitHub Pages
 
 The included workflow builds and deploys the site whenever `main` changes.

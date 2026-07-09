@@ -153,11 +153,18 @@ export function MapExplorer({
     if (!map || !origin || previousOriginRef.current === origin) return;
     previousOriginRef.current = origin;
 
-    const displayLatitude = Math.max(-84, Math.min(84, origin.lat));
+    const isPole = Math.abs(origin.lat) > 89.9;
+    const displayLatitude =
+      isPole && projection === 'globe'
+        ? Math.sign(origin.lat) * 62
+        : Math.max(-84, Math.min(84, origin.lat));
     map.easeTo({
       center: [origin.lng, displayLatitude],
       duration: 900,
-      zoom: Math.max(map.getZoom(), projection === 'globe' ? 1.45 : 1.2),
+      zoom:
+        isPole && projection === 'globe'
+          ? 0.9
+          : Math.max(map.getZoom(), projection === 'globe' ? 1.45 : 1.2),
     });
   }, [origin, projection]);
 
